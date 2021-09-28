@@ -14,64 +14,23 @@ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5
 kubectl wait -n cert-manager pods -l app=cert-manager --for=condition=ready
 kubectl wait -n cert-manager pods -l app=webhook --for=condition=ready
 
+DOMAIN_NAME_CONTACTS_PATH="${RESOURCES_PATH}/domain-contacts.yaml"
 
-# Create dns solver secrets
+
+# Create cert-manager dns solver service account key
+RESOURCES_PATH="${WORKDIR}/resources"
+CERT_KEY_PATH="${RESOURCES_PATH}/cert-admin-key.json"
+
+CERT_SERVICEACCOUNT="${CERT_SERVICEACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+
+mkdir -p ${RESOURCES_PATH}
+
 if [ ! -f ${CERT_KEY_PATH} ]
 then
-    echo "Cert-manager key not exist, creating..."
+    echo "Cert-manager service account [${CERT_SERVICEACCOUNT_NAME}] key not exist, creating..."
     gcloud iam service-accounts create ${CERT_SERVICEACCOUNT_NAME} --display-name ${CERT_SERVICEACCOUNT_NAME}
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} --member ${CERT_SERVICEACCOUNT} --role roles/dns.admin
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${CERT_SERVICEACCOUNT}" --role roles/dns.admin
     gcloud iam service-accounts keys create ${CERT_KEY_PATH} --iam-account ${CERT_SERVICEACCOUNT}
-    echo "Cert-manager already exist, skipping this step..."
+else
+    echo "Cert-manager service account [${CERT_SERVICEACCOUNT_NAME}] key already exist, skipping this step..."
 fi
-
-echo "Copying secrets to manifests..."
-cp ${CERT_KEY_PATH} ${BETA_CERT_SECRET_PATH}
-
-
-# Create issuer
-echo "Creating ${BETA_ISSUER_PATH} ..."
-cat <<EOT > ${BETA_ISSUER_PATH}
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: ${BETA_ISSUER_NAME}
-spec:
-  acme:
-    #server: https://acme-v02.api.letsencrypt.org/directory
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: ${CERT_EMAIL}
-    # Name of a secret used to store the ACME account private key
-    privateKeySecretRef:
-      # Secret resource used to store the account's private key
-      name: ${BETA_ISSUER_NAME}
-    solvers:
-    # ACME DNS-01 provider configurations
-    - selector: {}
-      dns01:
-        cloudDNS:
-          # The ID of the GCP project
-          project: ${PROJECT_ID}
-          # This is the secret used to access the service account
-          serviceAccountSecretRef:
-            name: clouddns-dns01-solver-svc-acct
-            key: ${CERT_SECRET_NAME}
-EOT
-
-
-# Create certificate
-echo "Creating ${BETA_CERT_PATH} ..."
-cat <<EOT > ${BETA_CERT_PATH}
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: ${BETA_CERT_NAME}
-spec:
-  secretName: ${BETA_CERT_SECRET_NAME}
-  issuerRef:
-    name: ${BETA_ISSUER_NAME}
-    kind: Issuer
-  dnsNames:
-  - ${BETA_FRONTEND_URL}
-  - ${BETA_BACKEND_URL}
-EOT

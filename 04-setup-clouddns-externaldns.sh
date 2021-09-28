@@ -7,8 +7,11 @@ else
     . ./env-variables.sh
 fi
 
+
 # Create external-dns deployment
-echo "Creating ${EXTERNAL_DNS_DEPLOYMENT_PATH} ..."
+EXTERNAL_DNS_DEPLOYMENT_PATH="${MANIFESTS_REPO_PATH}/bases/cluster-resources/external-dns/resources/deployment.yaml"
+
+echo "Creating external-dns deployment file ..."
 cat <<EOT > ${EXTERNAL_DNS_DEPLOYMENT_PATH}
 apiVersion: apps/v1
 kind: Deployment
@@ -50,10 +53,33 @@ kubectl apply -k "${MANIFESTS_REPO_PATH}/bases/cluster-resources/nginx-ingress-c
 
 
 # Create a DNS zone in Cloud DNS
+CLOUD_DNS_ZONE_DESCRIPTION="Automatically managed zone by external dns"
+
 echo "Creating DNS zone [${CLOUD_DNS_ZONE_NAME}] in Cloud DNS..."
 gcloud dns managed-zones create ${CLOUD_DNS_ZONE_NAME} \
     --description="${CLOUD_DNS_ZONE_DESCRIPTION}" \
     --dns-name="${DOMAIN_NAME}"
+
+
+# Create domain name contact info
+RESOURCES_PATH="${WORKDIR}/resources"
+DOMAIN_NAME_CONTACTS_PATH="${RESOURCES_PATH}/domain-contacts.yaml"
+
+mkdir -p ${RESOURCES_PATH}
+
+echo "Creating domain name contact info..."
+cat <<EOT > ${DOMAIN_NAME_CONTACTS_PATH}
+allContacts:
+  email: 'example@example.com'
+  phoneNumber: '+1.8005550123'
+  postalAddress:
+    regionCode: 'US'
+    postalCode: '94043'
+    administrativeArea: 'CA'
+    locality: 'Mountain View'
+    addressLines: ['1600 Amphitheatre Pkwy']
+    recipients: ['Jane Doe']
+EOT
 
 
 # Register a domain

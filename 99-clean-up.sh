@@ -34,5 +34,5 @@ rm -rf gitops-demo-backend
 rm -rf gitops-demo-frontend
 rm -rf gitops-demo-manifests
 
-rm -rf resources/*
+rm -rf resources
 rm env-variables.sh

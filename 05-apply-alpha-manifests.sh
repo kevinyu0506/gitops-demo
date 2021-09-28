@@ -13,7 +13,9 @@ KUSTOMIZE_PATH="overlays/${CURRENT_PHASE}"
 
 
 # Create ingress
-echo "Creating [${CURRENT_PHASE}] ingress resources: ${ALPHA_INGRESS_PATH} ..."
+ALPHA_INGRESS_PATH="${WORKDIR}/${MANIFESTS_REPO_NAME}/overlays/alpha/demo-apps/resources/ingress.yaml"
+
+echo "Creating [${CURRENT_PHASE}] ingress resources..."
 cat <<EOT > ${ALPHA_INGRESS_PATH}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
