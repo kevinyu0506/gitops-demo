@@ -14,8 +14,6 @@ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5
 kubectl wait -n cert-manager pods -l app=cert-manager --for=condition=ready
 kubectl wait -n cert-manager pods -l app=webhook --for=condition=ready
 
-DOMAIN_NAME_CONTACTS_PATH="${RESOURCES_PATH}/domain-contacts.yaml"
-
 
 # Create cert-manager dns solver service account key
 RESOURCES_PATH="${WORKDIR}/resources"

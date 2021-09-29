@@ -142,6 +142,6 @@ spec:
 EOT
 
 
-# Apply development resources
+# Apply beta resources
 echo "Applying [${CURRENT_PHASE}] phase resources..."
 kubectl apply -k ${MANIFESTS_REPO_PATH}/${KUSTOMIZE_PATH}
