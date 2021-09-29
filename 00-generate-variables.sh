@@ -27,6 +27,8 @@ ALPHA_BACKEND_URL="api-alpha.gitops-demo-app.com"
 BETA_FRONTEND_URL="my-beta.gitops-demo-app.com"
 BETA_BACKEND_URL="api-beta.gitops-demo-app.com"
 
+ARGOCD_URL="argocd.gitops-demo-app.com"
+
 
 echo "Creating ./env-variables.sh ..."
 cat <<EOT > ${WORKDIR}/env-variables.sh
@@ -60,4 +62,6 @@ export ALPHA_BACKEND_URL="${ALPHA_BACKEND_URL}"
 
 export BETA_FRONTEND_URL="${BETA_FRONTEND_URL}"
 export BETA_BACKEND_URL="${BETA_BACKEND_URL}"
+
+export ARGOCD_URL="${ARGOCD_URL}"
 EOT
