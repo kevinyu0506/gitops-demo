@@ -30,6 +30,13 @@ kubectl delete -k "${MANIFESTS_REPO_PATH}/bases/cluster-resources/nginx-ingress-
 echo "Delete cert-manager resources..."
 kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/v1.5.1/cert-manager.yaml
 
+
+# Install argo-cd resources
+echo "Delete argo-cd resources..."
+kubectl delete -k ${MANIFESTS_REPO_PATH}/bases/cluster-resources/argo-cd
+kubectl delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.1.0/manifests/install.yaml
+
+
 rm -rf gitops-demo-backend
 rm -rf gitops-demo-frontend
 rm -rf gitops-demo-manifests
