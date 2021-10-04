@@ -17,5 +17,6 @@ gcloud config set compute/zone ${COMPUTE_ZONE}
 echo "Creating cluster [${CLUSTER_NAME}]..."
 gcloud container clusters create ${CLUSTER_NAME} \
     --num-nodes=1 \
-    --scopes "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
+    --workload-pool=${PROJECT_ID}.svc.id.goog
+
 gcloud container clusters get-credentials ${CLUSTER_NAME}

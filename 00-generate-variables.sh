@@ -27,6 +27,7 @@ ARGOCD_URL="argocd.${DOMAIN_NAME}"
 
 # 3. Service account info that would be used by cert-manager
 
+EXTERNALDNS_SERVICEACCOUNT_NAME="dns-admin"
 CERT_SERVICEACCOUNT_NAME="cert-admin"
 CERT_EMAIL="kevinctyu@google.com"
 
@@ -66,6 +67,7 @@ export BETA_BACKEND_URL="${BETA_BACKEND_URL}"
 
 export ARGOCD_URL="${ARGOCD_URL}"
 
+export EXTERNALDNS_SERVICEACCOUNT_NAME="${EXTERNALDNS_SERVICEACCOUNT_NAME}"
 export CERT_SERVICEACCOUNT_NAME="${CERT_SERVICEACCOUNT_NAME}"
 export CERT_EMAIL="${CERT_EMAIL}"
 

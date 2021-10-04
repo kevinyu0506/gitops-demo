@@ -15,20 +15,15 @@ kubectl wait -n cert-manager pods -l app=cert-manager --for=condition=ready
 kubectl wait -n cert-manager pods -l app=webhook --for=condition=ready
 
 
-# Create cert-manager dns solver service account key
-RESOURCES_PATH="${WORKDIR}/resources"
-CERT_KEY_PATH="${RESOURCES_PATH}/cert-admin-key.json"
-
+# Create cert-manager account workload identity
 CERT_SERVICEACCOUNT="${CERT_SERVICEACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+KUBERNETES_SERVICEACCOUNT="${PROJECT_ID}.svc.id.goog[cert-manager/cert-manager]"
 
-mkdir -p ${RESOURCES_PATH}
+echo "Creating cert-manager service account [${CERT_SERVICEACCOUNT_NAME}]..."
+gcloud iam service-accounts create ${CERT_SERVICEACCOUNT_NAME} --display-name ${CERT_SERVICEACCOUNT_NAME}
+gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${CERT_SERVICEACCOUNT}" --role roles/dns.admin
 
-if [ ! -f ${CERT_KEY_PATH} ]
-then
-    echo "Cert-manager service account [${CERT_SERVICEACCOUNT_NAME}] key not exist, creating..."
-    gcloud iam service-accounts create ${CERT_SERVICEACCOUNT_NAME} --display-name ${CERT_SERVICEACCOUNT_NAME}
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${CERT_SERVICEACCOUNT}" --role roles/dns.admin
-    gcloud iam service-accounts keys create ${CERT_KEY_PATH} --iam-account ${CERT_SERVICEACCOUNT}
-else
-    echo "Cert-manager service account [${CERT_SERVICEACCOUNT_NAME}] key already exist, skipping this step..."
-fi
+echo "Linking KSA and GSA..."
+gcloud iam service-accounts add-iam-policy-binding --role roles/iam.workloadIdentityUser --member "serviceAccount:${KUBERNETES_SERVICEACCOUNT}" ${CERT_SERVICEACCOUNT}
+kubectl annotate serviceaccount --namespace=cert-manager cert-manager "iam.gke.io/gcp-service-account=${CERT_SERVICEACCOUNT}"
+

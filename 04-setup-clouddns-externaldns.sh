@@ -42,9 +42,25 @@ spec:
 EOT
 
 
+# Create external-dns service account workload identity
+EXTERNALDNS_SERVICEACCOUNT="${EXTERNALDNS_SERVICEACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+KUBERNETES_SERVICEACCOUNT="${PROJECT_ID}.svc.id.goog[external-dns/external-dns]"
+
+echo "Creating external-dns service account [${EXTERNALDNS_SERVICEACCOUNT_NAME}]..."
+gcloud iam service-accounts create ${EXTERNALDNS_SERVICEACCOUNT_NAME} --display-name ${EXTERNALDNS_SERVICEACCOUNT_NAME}
+gcloud projects add-iam-policy-binding ${PROJECT_ID} --member "serviceAccount:${EXTERNALDNS_SERVICEACCOUNT}" --role roles/dns.admin
+
+
+echo "Linking KSA and GSA..."
+gcloud iam service-accounts add-iam-policy-binding --role roles/iam.workloadIdentityUser --member "serviceAccount:${KUBERNETES_SERVICEACCOUNT}" ${EXTERNALDNS_SERVICEACCOUNT}
+
+
 # Install external-dns resources
 echo "Applying external-dns resources..."
 kubectl apply -k "${MANIFESTS_REPO_PATH}/bases/cluster-resources/external-dns"
+
+
+kubectl annotate serviceaccount --namespace=external-dns external-dns "iam.gke.io/gcp-service-account=${EXTERNALDNS_SERVICEACCOUNT}"
 
 
 # Install nginx-ingress-controller resources
