@@ -9,20 +9,10 @@ fi
 
 
 ARGOCD_CERTS_PATH="${MANIFESTS_REPO_PATH}/bases/cluster-resources/argo-cd/certs"
-ARGOCD_SECRETS_PATH="${MANIFESTS_REPO_PATH}/bases/cluster-resources/argo-cd/secrets"
 ARGOCD_RESOURCES_PATH="${MANIFESTS_REPO_PATH}/bases/cluster-resources/argo-cd/resources"
 
 mkdir -p ${ARGOCD_CERTS_PATH}
-mkdir -p ${ARGOCD_SECRETS_PATH}
 mkdir -p ${ARGOCD_RESOURCES_PATH}
-
-
-# Copy service account key
-RESOURCES_PATH="${WORKDIR}/resources"
-CERT_KEY_PATH="${RESOURCES_PATH}/cert-admin-key.json"
-
-echo "Copying service account key secrets..."
-cp ${CERT_KEY_PATH} ${ARGOCD_SECRETS_PATH}
 
 
 # Create issuer
@@ -32,7 +22,7 @@ echo "Creating argo-cd issuer..."
 
 cat <<EOT > "${ARGOCD_CERTS_PATH}/issuer.yaml"
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: ${ARGOCD_ISSUER_NAME}
 spec:
@@ -51,10 +41,6 @@ spec:
         cloudDNS:
           # The ID of the GCP project
           project: ${PROJECT_ID}
-          # This is the secret used to access the service account
-          serviceAccountSecretRef:
-            name: clouddns-dns01-solver-svc-acct
-            key: cert-admin-key.json
 EOT
 
 
@@ -74,7 +60,7 @@ spec:
   secretName: ${ARGOCD_CERT_SECRET_NAME}
   issuerRef:
     name: ${ARGOCD_ISSUER_NAME}
-    kind: Issuer
+    kind: ClusterIssuer
   dnsNames:
   - ${ARGOCD_URL}
 EOT
@@ -92,7 +78,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/service-upstream: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    cert-manager.io/issuer: ${ARGOCD_ISSUER_NAME}
+    cert-manager.io/cluster-issuer: ${ARGOCD_ISSUER_NAME}
 spec:
   rules:
   - host: ${ARGOCD_URL}

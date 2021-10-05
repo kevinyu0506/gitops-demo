@@ -4,6 +4,7 @@ WORKDIR=$(pwd)
 # 1. Connect to your gcp project and name the cluster you would like to create
 
 PROJECT_ID="kalschi-logging"
+PROJECT_NAME="kalschi-logging"
 CLUSTER_NAME="kevinctyu-gitops-demo-cluster"
 COMPUTE_REGION="asia-east1"
 COMPUTE_ZONE="asia-east1-a"
@@ -20,6 +21,9 @@ ALPHA_BACKEND_URL="api-alpha.${DOMAIN_NAME}"
 
 BETA_FRONTEND_URL="my-beta.${DOMAIN_NAME}"
 BETA_BACKEND_URL="api-beta.${DOMAIN_NAME}"
+
+RELEASE_FRONTEND_URL="my.${DOMAIN_NAME}"
+RELEASE_BACKEND_URL="api.${DOMAIN_NAME}"
 
 ARGOCD_URL="argocd.${DOMAIN_NAME}"
 
@@ -52,6 +56,7 @@ cat <<EOT > ${WORKDIR}/env-variables.sh
 export WORKDIR="${WORKDIR}"
 
 export PROJECT_ID="${PROJECT_ID}"
+export PROJECT_NAME="${PROJECT_NAME}"
 export CLUSTER_NAME="${CLUSTER_NAME}"
 export COMPUTE_REGION="${COMPUTE_REGION}"
 export COMPUTE_ZONE="${COMPUTE_ZONE}"
@@ -78,6 +83,9 @@ export FRONTEND_REPO_PATH="${WORKDIR}/${FRONTEND_REPO_NAME}"
 export BACKEND_REPO="${BACKEND_REPO}"
 export BACKEND_REPO_NAME="${BACKEND_REPO_NAME}"
 export BACKEND_REPO_PATH="${WORKDIR}/${BACKEND_REPO_NAME}"
+
+export RELEASE_FRONTEND_URL="${RELEASE_FRONTEND_URL}"
+export RELEASE_BACKEND_URL="${RELEASE_BACKEND_URL}"
 
 export MANIFESTS_REPO="${MANIFESTS_REPO}"
 export MANIFESTS_REPO_NAME="${MANIFESTS_REPO_NAME}"
