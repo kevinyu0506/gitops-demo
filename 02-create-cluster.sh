@@ -13,6 +13,11 @@ gcloud config set project ${PROJECT_ID}
 gcloud config set compute/region ${COMPUTE_REGION}
 gcloud config set compute/zone ${COMPUTE_ZONE}
 
+gcloud services enable container.googleapis.com
+gcloud services enable compute.googleapis.com
+gcloud services enable domains.googleapis.com
+gcloud services enable dns.googleapis.com
+
 
 echo "Creating cluster [${CLUSTER_NAME}]..."
 gcloud container clusters create ${CLUSTER_NAME} \

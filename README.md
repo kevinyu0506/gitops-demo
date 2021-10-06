@@ -2,6 +2,14 @@
 > The following scripts creates a sample three-tier web application on GCP
 
 
+## Requirements
+* kubectl version `1.22.1`
+```
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.1/bin/linux/amd64/kubectl
+```
+
+
+## Progress
 |     status       |         script         | outcome |
 |------------------|------------------------|--|
 |    complete      |`00-generate-variables.sh`| |
@@ -13,6 +21,4 @@
 |                  |`06-setup-cert-manager.sh`| |
 |                  |`07-apply-beta-manifets.sh`| visit http://my-beta.gitops-demo-app.com (replace with your domain name)|
 |                  |`08-setup-argo-cd.sh`| visit http://argocd.gitops-demo-app.com (replace with your domain name)|
-| work in progress |`09-configure-argo-cd.sh`| |
-|                  |`10-setup-cloud-build.sh`| |
-|                  |`11-setup-argo-rollouts.sh`| |
+|                  |`09-prepare-release-manifests.sh`| |

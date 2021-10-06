@@ -86,7 +86,7 @@ mkdir -p ${RESOURCES_PATH}
 echo "Creating domain name contact info..."
 cat <<EOT > ${DOMAIN_NAME_CONTACTS_PATH}
 allContacts:
-  email: 'example@example.com'
+  email: '${USER_EMAIL}'
   phoneNumber: '+1.8005550123'
   postalAddress:
     regionCode: 'US'
