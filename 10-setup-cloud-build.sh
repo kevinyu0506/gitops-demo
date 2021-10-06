@@ -7,8 +7,10 @@ else
     . ./env-variables.sh
 fi
 
+#https://cloud.google.com/source-repositories/docs/authentication
 
 # Create cloud source repo
+echo "Creating backend source repo..."
 gcloud source repos create ${BACKEND_REPO_NAME}
 cd ${BACKEND_REPO_PATH}
 
@@ -42,6 +44,7 @@ git add .
 git commit -m "Init commit"
 git remote add google https://source.developers.google.com/p/${PROJECT_NAME}/r/${BACKEND_REPO_NAME}
 git push --all google
+
 
 #gcloud source repos create ${FRONTEND_REPO_NAME}
 #cd ${FRONTEND_REPO_PATH}

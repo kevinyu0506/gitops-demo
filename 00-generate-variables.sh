@@ -5,6 +5,7 @@ WORKDIR=$(pwd)
 
 PROJECT_ID="kalschi-logging"
 PROJECT_NAME="kalschi-logging"
+USER_EMAIL="kevinctyu@google.com"
 CLUSTER_NAME="kevinctyu-gitops-demo-cluster"
 COMPUTE_REGION="asia-east1"
 COMPUTE_ZONE="asia-east1-a"
@@ -57,6 +58,7 @@ export WORKDIR="${WORKDIR}"
 
 export PROJECT_ID="${PROJECT_ID}"
 export PROJECT_NAME="${PROJECT_NAME}"
+export USER_EMAIL="${USER_EMAIL}"
 export CLUSTER_NAME="${CLUSTER_NAME}"
 export COMPUTE_REGION="${COMPUTE_REGION}"
 export COMPUTE_ZONE="${COMPUTE_ZONE}"
