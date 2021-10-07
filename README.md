@@ -1,16 +1,19 @@
-# GitOps Demo
-> The following scripts creates a sample three-tier web application on GCP
+# GitOps in Google Cloud Platform
+The following scripts create a sample three-tier web application on GCP, integrating services such as **Cloud DNS**, **Cloud Build**, **Google Kubernetes Engine** and other open source projects into an automated **GitOps solution**.
 
 
 ## Requirements
-* kubectl version `1.22.1`
+* kubectl version 1.22.1
 ```
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.1/bin/linux/amd64/kubectl
+$ curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.1/bin/linux/amd64/kubectl
 ```
-
+* Cloud SDK
+```
+$ curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-360.0.0-linux-x86_64.tar.gz
+```
 
 ## Progress
-|     status       |         script         | outcome |
+|     status       |         script         | verify |
 |------------------|------------------------|--|
 |    complete      |`00-generate-variables.sh`| |
 |                  |`01-clone-repos.sh`| |
